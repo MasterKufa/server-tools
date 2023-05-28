@@ -7,10 +7,10 @@ import os from 'os';
 export class WorkersPool<T extends Task, U> {
   private controller: AbortController;
   private taskSequence: yallist<T> = yallist.create();
-  private poolOptions: PoolOptions;
+  private poolOptions: PoolOptions | null = null;
   // toDo make monitoring of really free cpus
   private freeCpus: number = os.cpus().length || 1;
-  constructor(poolOptions: PoolOptions) {
+  constructor(poolOptions?: PoolOptions) {
     this.controller = new AbortController();
     this.poolOptions = poolOptions;
   }
@@ -30,7 +30,7 @@ export class WorkersPool<T extends Task, U> {
     this.freeCpus -= 1;
 
     const worker = fork(availableTask.processPath, [], {
-      timeout: this.poolOptions.poolLifetime || STANDARD_POOL_LIFETIME,
+      timeout: this.poolOptions?.poolLifetime || STANDARD_POOL_LIFETIME,
       signal: this.controller.signal,
     });
 
