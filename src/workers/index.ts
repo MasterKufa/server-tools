@@ -1,27 +1,18 @@
 import { fork } from 'child_process';
-import { range } from 'lodash';
 import * as yallist from 'yallist';
 import { STANDARD_POOL_LIFETIME } from './constants';
-import { PoolOptions, Task, Worker } from './types';
+import { PoolOptions, Task } from './types';
 import os from 'os';
 
 export class WorkersPool<T extends Task, U> {
-  private pool: Worker[];
   private controller: AbortController;
   private taskSequence: yallist<T> = yallist.create();
+  private poolOptions: PoolOptions;
+  // toDo make monitoring of really free cpus
+  private freeCpus: number = os.cpus().length || 1;
   constructor(poolOptions: PoolOptions) {
     this.controller = new AbortController();
-    this.pool = [];
-
-    range(os.cpus().length).forEach(() => {
-      this.pool.push({
-        worker: fork(poolOptions.processPath, [], {
-          timeout: poolOptions.poolLifetime || STANDARD_POOL_LIFETIME,
-          signal: this.controller.signal,
-        }),
-        isFree: true,
-      });
-    });
+    this.poolOptions = poolOptions;
   }
 
   planTask(task: T) {
@@ -30,23 +21,31 @@ export class WorkersPool<T extends Task, U> {
   }
 
   tryRunTask() {
-    const freeWorker = this.pool.find((worker) => worker.isFree);
+    if (!Boolean(this.freeCpus)) return;
+
     const availableTask = this.taskSequence.shift();
 
-    if (!(freeWorker && availableTask)) return;
+    if (!availableTask) return;
 
-    freeWorker.isFree = false;
-    freeWorker.worker.send(availableTask);
+    this.freeCpus -= 1;
+
+    const worker = fork(availableTask.processPath, [], {
+      timeout: this.poolOptions.poolLifetime || STANDARD_POOL_LIFETIME,
+      signal: this.controller.signal,
+    });
+
+    worker.send(availableTask);
 
     const handler = (result: U) => {
-      freeWorker.isFree = true;
+      this.freeCpus += 1;
       availableTask.callback(result);
       this.tryRunTask();
 
-      freeWorker.worker.removeListener('message', handler);
+      worker.removeListener('message', handler);
+      worker.kill();
     };
 
-    freeWorker.worker.addListener('message', handler);
+    worker.addListener('message', handler);
   }
 
   shutdown() {
