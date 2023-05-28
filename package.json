@@ -1,0 +1,26 @@
+{
+  "name": "MasterKufaTools",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MasterKufa/MasterKufaTools.git"
+  },
+  "author": "MasterKufa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MasterKufa/MasterKufaTools/issues"
+  },
+  "homepage": "https://github.com/MasterKufa/MasterKufaTools#readme",
+  "devDependencies": {
+    "@types/lodash": "^4.14.195",
+    "@types/node": "^20.2.5",
+    "@types/yallist": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.7",
+    "@typescript-eslint/parser": "^5.59.7",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "yallist": "^4.0.0"
+  }
+}
