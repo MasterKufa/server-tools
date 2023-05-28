@@ -2,7 +2,7 @@ import { fork } from 'child_process';
 import * as yallist from 'yallist';
 import { STANDARD_POOL_LIFETIME } from './constants';
 import { PoolOptions, Task } from './types';
-import os from 'os';
+import * as os from 'os';
 
 export class WorkersPool<T extends Task, U> {
   private controller: AbortController;
