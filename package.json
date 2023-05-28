@@ -28,6 +28,6 @@
     "yallist": "^4.0.0"
   },
   "exports": {
-    ".": "./dist"
+    ".": "./dist/index.js"
   }
 }
