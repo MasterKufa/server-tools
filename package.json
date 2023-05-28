@@ -1,9 +1,13 @@
 {
   "name": "MasterKufaTools",
+  "type": "module",
   "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MasterKufa/MasterKufaTools.git"
+  },
+  "scripts": {
+    "postinstall": "tsc"
   },
   "author": "MasterKufa",
   "license": "ISC",
@@ -22,5 +26,8 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "yallist": "^4.0.0"
+  },
+  "exports": {
+    "./*": "./dist/*"
   }
 }
