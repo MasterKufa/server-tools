@@ -1,12 +1,12 @@
 {
-  "name": "MasterKufaTools",
-  "version": "1.0.0",
+  "name": "@master_kufa/tools",
+  "version": "2.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MasterKufa/MasterKufaTools.git"
   },
   "scripts": {
-    "postinstall": "tsc"
+    "build": "tsc"
   },
   "author": "MasterKufa",
   "license": "ISC",
@@ -26,7 +26,11 @@
     "lodash": "^4.17.21",
     "yallist": "^4.0.0"
   },
+  "main": "./dist/index.js",
   "exports": {
     ".": "./dist/index.js"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
