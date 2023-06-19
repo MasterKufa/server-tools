@@ -1,9 +1,9 @@
 {
-  "name": "@master_kufa/tools",
-  "version": "2.0.1",
+  "name": "@master_kufa/server-tools",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MasterKufa/MasterKufaTools.git"
+    "url": "git+https://github.com/MasterKufa/server-tools.git"
   },
   "scripts": {
     "build": "tsc"
@@ -11,9 +11,9 @@
   "author": "MasterKufa",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MasterKufa/MasterKufaTools/issues"
+    "url": "https://github.com/MasterKufa/server-tools/issues"
   },
-  "homepage": "https://github.com/MasterKufa/MasterKufaTools#readme",
+  "homepage": "https://github.com/MasterKufa/server-tools#readme",
   "devDependencies": {
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.2.5",
@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
+    "nanoid": "^4.0.2",
     "yallist": "^4.0.0"
   },
   "main": "./dist/index.js",
@@ -31,6 +32,8 @@
     ".": "./dist/index.js"
   },
   "files": [
-    "dist"
-  ]
+    "dist",
+    "types.d.ts"
+  ],
+  "types": "./types.d.ts"
 }

@@ -1,1 +1,1 @@
-export { WorkersPool } from './src';
+export * from './src';

@@ -1,8 +1,6 @@
 README.md
 index.ts
 node_modules
-package-lock.json
-package.json
 src
 tsconfig.json
 .prettierrc
