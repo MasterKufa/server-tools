@@ -1,6 +1,6 @@
 {
   "name": "@master_kufa/server-tools",
-  "version": "0.1.0",
+  "version": "0.1.21",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MasterKufa/server-tools.git"
@@ -24,16 +24,12 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "nanoid": "^4.0.2",
+    "nanoid": "^3.3.4",
+    "socket.io": "^4.7.1",
+    "socket.io-client": "^4.7.1",
     "yallist": "^4.0.0"
   },
   "main": "./dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
-  },
-  "files": [
-    "dist",
-    "types.d.ts"
-  ],
-  "types": "./types.d.ts"
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts"
 }
