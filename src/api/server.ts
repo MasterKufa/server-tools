@@ -1,7 +1,8 @@
 import { Server } from 'socket.io';
 import { io } from 'socket.io-client';
-import { SocketActions, SocketErrors, SocketResponse } from './types';
+import { SocketActions, SocketResponse } from './types';
 import { nanoid } from 'nanoid';
+import jwt_decode from 'jwt-decode';
 
 export const createServer = (opts?: { withAuthorization: boolean }) => {
   const server = new Server(Number(process.env.SERVER_PORT));
@@ -16,9 +17,15 @@ export const createServer = (opts?: { withAuthorization: boolean }) => {
         requestId: nanoid(),
         token: socket.handshake.auth.token,
       });
-      authSocket.on(SocketActions.VERIFY, ({ error }: SocketResponse<void>) =>
-        next(error && new Error(error)),
-      );
+      authSocket.on(SocketActions.VERIFY, ({ error }: SocketResponse<void>) => {
+        if (!error) {
+          socket.handshake.auth.decoded = jwt_decode(
+            socket.handshake.auth.token,
+          );
+        }
+
+        next(error && new Error(error));
+      });
     });
   }
 
