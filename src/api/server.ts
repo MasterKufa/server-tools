@@ -17,15 +17,25 @@ export const createServer = (opts?: { withAuthorization: boolean }) => {
         requestId: nanoid(),
         token: socket.handshake.auth.token,
       });
-      authSocket.on(SocketActions.VERIFY, ({ error }: SocketResponse<void>) => {
+
+      const verifyHandler = ({ error }: SocketResponse<void>) => {
         if (!error) {
           socket.handshake.auth.decoded = jwt_decode(
             socket.handshake.auth.token,
           );
         }
 
-        next(error && new Error(error));
-      });
+        if (error) {
+          next(new Error(error));
+          authSocket.off(SocketActions.VERIFY, verifyHandler);
+
+          return;
+        }
+
+        next();
+      };
+
+      authSocket.on(SocketActions.VERIFY, verifyHandler);
     });
   }
 
