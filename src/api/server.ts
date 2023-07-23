@@ -1,8 +1,8 @@
 import { Server } from 'socket.io';
 import { io } from 'socket.io-client';
-import { SocketActions, SocketResponse } from './types';
-import { nanoid } from 'nanoid';
+import { SocketActions } from './types';
 import jwt_decode from 'jwt-decode';
+import { emitWithAnswer } from './client';
 
 export const createServer = (opts?: { withAuthorization: boolean }) => {
   const server = new Server(Number(process.env.SERVER_PORT));
@@ -12,30 +12,19 @@ export const createServer = (opts?: { withAuthorization: boolean }) => {
       transports: ['websocket'],
     });
 
-    server.use((socket, next) => {
-      authSocket.emit(SocketActions.VERIFY, {
-        requestId: nanoid(),
-        token: socket.handshake.auth.token,
-      });
+    server.use(async (socket, next) => {
+      try {
+        await emitWithAnswer(authSocket, SocketActions.VERIFY, {
+          token: socket.handshake.auth.token,
+        });
 
-      const verifyHandler = ({ error }: SocketResponse<void>) => {
-        if (!error) {
-          socket.handshake.auth.decoded = jwt_decode(
-            socket.handshake.auth.token,
-          );
-        }
-
-        if (error) {
-          next(new Error(error));
-          authSocket.off(SocketActions.VERIFY, verifyHandler);
-
-          return;
-        }
+        socket.handshake.auth.decoded = jwt_decode(socket.handshake.auth.token);
 
         next();
-      };
-
-      authSocket.on(SocketActions.VERIFY, verifyHandler);
+      } catch (error) {
+        next(new Error(error));
+        socket.disconnect();
+      }
     });
   }
 
