@@ -1,6 +1,6 @@
 {
   "name": "@master_kufa/server-tools",
-  "version": "0.1.24",
+  "version": "0.1.26",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MasterKufa/server-tools.git"

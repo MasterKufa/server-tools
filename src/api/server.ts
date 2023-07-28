@@ -5,10 +5,15 @@ import jwt_decode from 'jwt-decode';
 import { emitWithAnswer } from './client';
 
 export const createServer = (opts?: { withAuthorization: boolean }) => {
-  const server = new Server(Number(process.env.SERVER_PORT));
+  const server = new Server(Number(process.env.SERVER_PORT), {
+    path: process.env.SERVER_PATH,
+  });
 
   if (opts?.withAuthorization) {
-    const authSocket = io(process.env.AUTH_HOST, {
+    const clientUrl = new URL(process.env.AUTH_HOST);
+
+    const authSocket = io(clientUrl.origin, {
+      path: clientUrl.pathname ? `${clientUrl.pathname}/socket.io` : undefined,
       transports: ['websocket'],
     });
 
